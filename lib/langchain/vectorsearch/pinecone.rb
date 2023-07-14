@@ -41,7 +41,7 @@ module Langchain::Vectorsearch
       vectors = texts.map.with_index do |text, i|
         {
           id: ids[i] ? ids[i].to_s : SecureRandom.uuid,
-          metadata: metadata || {content: text},
+          metadata: metadata.merge(content: text),
           values: llm.embed(text: text)
         }
       end
