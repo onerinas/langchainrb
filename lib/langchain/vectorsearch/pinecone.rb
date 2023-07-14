@@ -64,10 +64,7 @@ module Langchain::Vectorsearch
           namespace: namespace,
           id: ids[i].to_s,
           values: llm.embed(text: text),
-          # set_metadata is always nil here causing nil.blank? to fail in Pinecone::Vector#update
-          # since we don't pass metadata from update_texts in Active hook 
-          # see https://github.com/onerinas/langchainrb/blob/2773bf24455641eee9f39ae65673acb212775c85/lib/langchain/active_record/hooks.rb#L57C59-L57C59
-          # set_metadata: metadata
+          set_metadata: metadata
         )
       end
     end

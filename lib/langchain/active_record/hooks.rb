@@ -57,7 +57,8 @@ module Langchain
         else
           self.class.class_variable_get(:@@provider).update_texts(
             texts: [as_vector],
-            ids: [id]
+            ids: [id],
+            metadata: vector_metadata
           )
         end
       end
