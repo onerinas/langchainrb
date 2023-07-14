@@ -75,9 +75,9 @@ module Langchain
       # Overwrite this method in your model to customize
       #
       # @return [Hash] the metadata to add to the vector search provider
-      def vector_metadata
-        nil
-      end
+      # def vector_metadata
+      #   nil
+      # end
 
       module ClassMethods
         # Set the vector search provider
