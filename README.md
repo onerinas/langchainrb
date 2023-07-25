@@ -39,7 +39,7 @@ require "langchain"
 | [Hnswlib](https://github.com/nmslib/hnswlib/) | :white_check_mark: | :white_check_mark: | :white_check_mark: | WIP     | WIP               |
 | [Milvus](https://milvus.io/) | :white_check_mark: | :white_check_mark: | :white_check_mark: | WIP     | WIP               |
 | [Pinecone](https://www.pinecone.io/) | :white_check_mark: | :white_check_mark: | :white_check_mark: | WIP     | :white_check_mark: |
-| [Pgvector](https://github.com/pgvector/pgvector) | :white_check_mark: | :white_check_mark: | :white_check_mark: | WIP     | WIP               |
+| [Pgvector](https://github.com/pgvector/pgvector) | :white_check_mark: | :white_check_mark: | :white_check_mark: | WIP     | :white_check_mark: |
 | [Qdrant](https://qdrant.tech/) | :white_check_mark: | :white_check_mark: | :white_check_mark: | WIP     | :white_check_mark: |
 | [Weaviate](https://weaviate.io/) | :white_check_mark: | :white_check_mark: | :white_check_mark: | WIP     | :white_check_mark: |
 
@@ -54,7 +54,7 @@ Pick the vector search database you'll be using and instantiate the client:
 client = Langchain::Vectorsearch::Weaviate.new(
     url: ENV["WEAVIATE_URL"],
     api_key: ENV["WEAVIATE_API_KEY"],
-    index: "",
+    index_name: "",
     llm: Langchain::LLM::OpenAI.new(api_key: ENV["OPENAI_API_KEY"])
 )
 
@@ -144,6 +144,27 @@ openai.embed(text: "foo bar")
 ```ruby
 openai.complete(prompt: "What is the meaning of life?")
 ```
+
+##### Open AI Function calls support
+
+Conversation support
+
+```ruby
+chat = Langchain::Conversation.new(llm: openai)
+```
+```ruby
+chat.set_context("You are the climate bot")
+chat.set_functions(functions)
+```
+
+qdrant:
+
+```ruby
+client.llm.functions = functions
+client.llm.complete_response = true
+```
+
+`complete_response` will return the entire choices data from the gpt response
 
 #### Cohere
 Add `gem "cohere-ruby", "~> 0.9.3"` to your Gemfile.
