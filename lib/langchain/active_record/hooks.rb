@@ -93,29 +93,20 @@ module Langchain
         # @param filter [Hash] The filter to use
         # @param k [Integer] The number of results to return
         # @return [ActiveRecord::Relation] The ActiveRecord relation
-        def similarity_search(query, filter:, k: 1)
+        def similarity_search(query, filter:, k: 1, score: nil)
           records = class_variable_get(:@@provider).similarity_search(
             query: query,
             filter: filter,
             k: k
           )
 
-          records
+          # Filter records by given similarity score
+          if score.present?
+            records = records.select { |record| record.dig("score") >= score.to_f }
+          end
 
-          # # We use "__id" when Weaviate is the provider
-          # ids = records.map { |record| record.dig("id") || record.dig("__id") }
-
-          # # Get the records from the DB
-          # model_results = where(id: ids)
-
-          # # Add the similarity score to the records
-          # model_results.each do |model|
-          #   record = records.find { |record| record.dig("id") == model.id }
-          #   model.score = record.dig("score")
-          # end
-
-          # # Sort the records by similarity score
-          # model_results.sort_by(&:score).reverse
+          # We use "__id" when Weaviate is the provider
+          ids = records.map { |record| record.dig("id") || record.dig("__id") }
         end
       end
     end
