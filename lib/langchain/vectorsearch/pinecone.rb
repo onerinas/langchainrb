@@ -41,7 +41,7 @@ module Langchain::Vectorsearch
       vectors = texts.map.with_index do |text, i|
         {
           id: ids[i] ? ids[i].to_s : SecureRandom.uuid,
-          metadata: metadata.merge(content: text),
+          metadata: metadata || {content: text},
           values: llm.embed(text: text)
         }
       end
@@ -117,7 +117,7 @@ module Langchain::Vectorsearch
     # @param embedding [Array] The embedding to search for
     # @param k [Integer] The number of results to return
     # @param namespace [String] The namespace to search in
-    # @param filter [Hash] The filter to use
+    # @param filter [String] The filter to use
     # @return [Array] The list of results
     def similarity_search_by_vector(embedding:, k: 4, namespace: "", filter: nil)
       index = client.index(index_name)

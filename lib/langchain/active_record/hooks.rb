@@ -102,7 +102,18 @@ module Langchain
 
           # We use "__id" when Weaviate is the provider
           ids = records.map { |record| record.dig("id") || record.dig("__id") }
-          where(id: ids)
+
+          # Get the records from the DB
+          model_results = where(id: ids)
+
+          # Add the similarity score to the records
+          model_results.each do |model|
+            record = records.find { |record| record.dig("id") == model.id }
+            model.score = record.dig("score")
+          end
+
+          # Sort the records by similarity score
+          model_results.sort_by(&:score).reverse
         end
       end
     end
