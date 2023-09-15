@@ -90,24 +90,17 @@ module Langchain
         # Search for similar texts
         #
         # @param query [String] The query to search for
-        # @param filter [Hash] The filter to use
         # @param k [Integer] The number of results to return
-        # @param similarity_threshold [Float] The minimum similarity score to use as a threshold for results
         # @return [ActiveRecord::Relation] The ActiveRecord relation
-        def similarity_search(query, filter:, k: 1, similarity_threshold: nil)
+        def similarity_search(query, k: 1)
           records = class_variable_get(:@@provider).similarity_search(
             query: query,
-            filter: filter,
             k: k
           )
 
-          # Filter records by similarity threshold
-          if similarity_threshold.present?
-            records = records.select { |record| record.dig("score") >= similarity_threshold.to_f }
-          end
-
           # We use "__id" when Weaviate is the provider
           ids = records.map { |record| record.dig("id") || record.dig("__id") }
+          where(id: ids)
         end
       end
     end
