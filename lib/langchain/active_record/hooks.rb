@@ -51,12 +51,14 @@ module Langchain
         if previously_new_record?
           self.class.class_variable_get(:@@provider).add_texts(
             texts: [as_vector],
-            ids: [id]
+            ids: [id],
+            metadata: vector_metadata
           )
         else
           self.class.class_variable_get(:@@provider).update_texts(
             texts: [as_vector],
-            ids: [id]
+            ids: [id],
+            metadata: vector_metadata
           )
         end
       end
@@ -67,6 +69,14 @@ module Langchain
       # @return [String] the text representation of the model
       def as_vector
         to_json
+      end
+
+      # Used to add metadata to the vector search provider
+      # Overwrite this method in your model to customize
+      #
+      # @return [Hash] the metadata to add to the vector search provider
+      def vector_metadata
+        nil
       end
 
       module ClassMethods
